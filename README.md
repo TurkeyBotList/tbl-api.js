@@ -3,6 +3,6 @@
 # How to use
 Example: 
 ```js
-const TBL = require("tbl-api.js");
+const TBL = require("@foxreistr/tbl-api.js");
 const tbl = new("TBLTOKEN", client);
 ```

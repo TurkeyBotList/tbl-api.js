@@ -1,6 +1,6 @@
 {
-  "name": "tbl-api.js",
-  "version": "1.0.0",
+  "name": "@foxreistr/tbl-api.js",
+  "version": "1.0.1",
   "description": "Turkey Bot List API Library.",
   "main": "index.js",
   "scripts": {
@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/TurkeyBotList/tbl-api.js/issues"
   },
-  "homepage": "https://github.com/TurkeyBotList/tbl-api.js#readme"
+  "homepage": "https://github.com/TurkeyBotList/tbl-api.js#readme",
+  "dependencies": {
+    "snekfetch": "^4.0.4"
+  }
 }
