@@ -4,5 +4,5 @@
 Example: 
 ```js
 const TBL = require("@foxreistr/tbl-api.js");
-const tbl = new("TBLTOKEN", client);
+const tbl = new TBL("TBL_TOKEN_HERE", client);
 ```
