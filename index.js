@@ -30,7 +30,7 @@ class TBLAPI {
     if (serverCount) {
       data.server_count = serverCount;
     } else {
-      data.server_count = this.client.guilds.cache.size;
+      data.server_count = this.client.guilds.cache.size || this.client.guilds.size;
      
     }
     const response = await this._request('post', `auth/stats/${this.client.user.id}`, data, true);

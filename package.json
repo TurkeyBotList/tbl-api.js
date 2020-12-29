@@ -1,6 +1,6 @@
 {
   "name": "@foxreistr/tbl-api.js",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Turkey Bot List API Library.",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "library",
     "turkeybotlist"
   ],
-  "author": "",
+  "author": "Reis And Sallamadim",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/TurkeyBotList/tbl-api.js/issues"
