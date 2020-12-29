@@ -1,5 +1,5 @@
 const snekfetch = require('snekfetch');
-const API = 'https://https://turkeybotlist.gq/api/';
+const API = 'https://turkeybotlist.gq/api/';
 
 class TBLAPI {
   constructor(token, client) {
