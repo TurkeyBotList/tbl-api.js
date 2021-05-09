@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/TurkeyBotList/tbl-api.js#readme",
   "dependencies": {
-    "snekfetch": "^4.0.4"
+    "node-fetch": "^2.6.1"
   }
 }
