@@ -55,4 +55,4 @@ class TBLAPI {
   }
 }
 
-module.exports = TBLAPI;
+module.exports = Object.assign(TBLAPI, { error: TBLError });
