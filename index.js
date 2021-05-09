@@ -24,9 +24,14 @@ class TBLAPI {
       });
     }
     
+    const cache = {};
     const baseURL = 'https://turkeylist.gq/api';
-    this._request = async (method, endpoint, body=null, auth=false, callback=null) => {
+    this._request = async ({ method, endpoint, body, auth, callback, cacheTime }) => {
       if (auth && (!token || typeof token !== 'string')) throw new TBLError({ message: `The endpoint '${endpoint}' requires a token.` });
+      const currentTime = Math.round(new Date().getTime() / 1000);
+
+      if (cacheTime && cache[endpoint] && cache[endpoint].next > currentTime)
+        return cache[endpoint].response;
       
       const response = await fetch(`${baseURL}${endpoint}`, {
         method,
@@ -36,12 +41,18 @@ class TBLAPI {
       
       let json;
       if (response.status >= 400) throw new TBLError({ response });
-      else if (callback) return await callback(response);
+      else if (callback) {
+        const res = await callback(response);
+        if (cacheTime) cache[endpoint] = { next: currentTime + cacheTime, response: res };
+        return res;
+      }
 
       try {
         json = await response.json();
         
         if (!json.success && json.error) throw new TBLError({ message: `Error: ${json.error}`, response, });
+        else if (cacheTime) cache[endpoint] = { next: currentTime + cacheTime, response: json };
+        
         return json;
       } catch {
         throw new TBLError({ message: `Error: unable to parse JSON response. please try again later.`, response, });
@@ -56,7 +67,12 @@ class TBLAPI {
    */
   async embed(botID) {
     if (!botID || isNaN(botID)) throw new TypeError(`Please provide a valid bot ID.`);
-    return await this._request('GET', `/embed/${botID}`, null, false, async res => await res.buffer());
+    return await this._request({
+      method: 'GET',
+      endpoint: `/embed/${botID}`,
+      cacheTime: 600,
+      callback: async (res) => await res.buffer()
+    });
   }
 
   /**
@@ -67,9 +83,14 @@ class TBLAPI {
   async postStats(serverCount) {
     if (!serverCount && !this.client) throw new Error('postStats requires 1 argument');
     
-    const response = await this._request('POST', `/auth/stats/${this.client.user.id}`, {
-      server_count: serverCount || this.client.guilds.cache.size || this.client.guilds.size
-    }, true);
+    const response = await this._request({
+      method: 'POST',
+      endpoint: `/auth/stats/${this.client.user.id}`,
+      body: {
+        server_count: serverCount || this.client.guilds.cache.size || this.client.guilds.size
+      },
+      auth: true
+    });
     console.log("Server Count Posted to TBL!");
     return response;
   }
