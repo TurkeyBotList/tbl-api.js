@@ -8,6 +8,11 @@ class TBLError extends Error {
 }
 
 class TBLAPI {
+  /**
+   * The TBL API client object.
+   * @param {string} token The bot token.
+   * @param {any} client discord.js client object.
+   */
   constructor(token, client) {
     if (client) {
       this.client = client;
@@ -20,7 +25,7 @@ class TBLAPI {
     }
     
     const baseURL = 'https://turkeylist.gq/api';
-    this._request = async (method, endpoint, body=null, auth=false) => {
+    this._request = async (method, endpoint, body=null, auth=false, callback=null) => {
       if (auth && (!token || typeof token !== 'string')) throw new TBLError({ message: `The endpoint '${endpoint}' requires a token.` });
       
       const response = await fetch(`${baseURL}${endpoint}`, {
@@ -31,6 +36,8 @@ class TBLAPI {
       
       let json;
       if (response.status >= 400) throw new TBLError({ response });
+      else if (callback) return await callback(response);
+
       try {
         json = await response.json();
         
@@ -42,7 +49,22 @@ class TBLAPI {
     };
   }
 
-  async postStats(serverCount, shardId, shardCount) {
+  /**
+   * Returns the image embed of a bot ID listed on Turkey Bot List.
+   * @param {number|string} botID The bot's ID.
+   * @returns {Promise<Buffer>} The image buffer.
+   */
+  async embed(botID) {
+    if (!botID || isNaN(botID)) throw new TypeError(`Please provide a valid bot ID.`);
+    return await this._request('GET', `/embed/${botID}`, null, false, res => res.buffer());
+  }
+
+  /**
+   * Posts the server count to the Turkey Bot List servers.
+   * @param {number} serverCount The server count.
+   * @returns {Object} The response.
+   */
+  async postStats(serverCount) {
     if (!serverCount && !this.client) throw new Error('postStats requires 1 argument');
     
     const response = await this._request('POST', `/auth/stats/${this.client.user.id}`, {
