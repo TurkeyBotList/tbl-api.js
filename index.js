@@ -34,10 +34,10 @@ class TBLAPI {
       try {
         json = await response.json();
         
-        if (!json.success && json.error) throw new TBLError({ message: `Error: ${json.error}` });
+        if (!json.success && json.error) throw new TBLError({ message: `Error: ${json.error}`, response, });
         return json;
       } catch {
-        throw new TBLError({ message: `Error: unable to parse JSON response. please try again later.` });
+        throw new TBLError({ message: `Error: unable to parse JSON response. please try again later.`, response, });
       }
     };
   }
