@@ -9,8 +9,6 @@ class TBLError extends Error {
 
 class TBLAPI {
   constructor(token, client) {
-    if (!token || typeof token !== 'string') throw new Error(`Missing a token.`);
-    
     if (client) {
       this.client = client;
       client.on('ready', () => {
@@ -23,7 +21,7 @@ class TBLAPI {
     
     const baseURL = 'https://turkeylist.gq/api';
     this._request = async (method, endpoint, body=null, auth=false) => {
-      if (auth && typeof token !== 'string') throw new TBLError({ message: `The endpoint '${endpoint}' requires a token.` });
+      if (auth && (!token || typeof token !== 'string')) throw new TBLError({ message: `The endpoint '${endpoint}' requires a token.` });
       
       const response = await fetch(`${baseURL}${endpoint}`, {
         method,
