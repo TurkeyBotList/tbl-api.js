@@ -56,7 +56,7 @@ class TBLAPI {
    */
   async embed(botID) {
     if (!botID || isNaN(botID)) throw new TypeError(`Please provide a valid bot ID.`);
-    return await this._request('GET', `/embed/${botID}`, null, false, res => res.buffer());
+    return await this._request('GET', `/embed/${botID}`, null, false, async res => await res.buffer());
   }
 
   /**
