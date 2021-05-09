@@ -1,9 +1,10 @@
 const snekfetch = require('snekfetch');
-const API = 'https://turkeybotlist.fly.dev/api/';
+const API = 'https://turkeylist.gq/api/';
 
 class TBLAPI {
   constructor(token, client) {
     this.token = token;
+    if (!this.token || typeof this.token !== 'string') throw new Error(`Missing a token.`);
     if (client) {
       this.client = client;
       client.on('ready', () => {
@@ -24,20 +25,14 @@ class TBLAPI {
   }
 
   async postStats(serverCount, shardId, shardCount) {
-    if (!this.token) throw new Error('This function requires a token to be set');
     if (!serverCount && !this.client) throw new Error('postStats requires 1 argument');
-    const data = {};
-    if (serverCount) {
-      data.server_count = serverCount;
-    } else {
-      data.server_count = this.client.guilds.cache.size || this.client.guilds.size;
-     
-    }
+    const data = {
+       server_count: serverCount || this.client.guilds.cache.size || this.client.guilds.size
+    };
     const response = await this._request('post', `auth/stats/${this.client.user.id}`, data, true);
-    console.log("Server Count Posted to TBL!")
+    console.log("Server Count Posted to TBL!");
     return response.body;
   }
-
 }
 
 module.exports = TBLAPI;
