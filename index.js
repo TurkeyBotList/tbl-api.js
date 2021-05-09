@@ -26,10 +26,9 @@ class TBLAPI {
 
   async postStats(serverCount, shardId, shardCount) {
     if (!serverCount && !this.client) throw new Error('postStats requires 1 argument');
-    const data = {
-       server_count: serverCount || this.client.guilds.cache.size || this.client.guilds.size
-    };
-    const response = await this._request('post', `auth/stats/${this.client.user.id}`, data, true);
+    const response = await this._request('post', `auth/stats/${this.client.user.id}`, {
+      server_count: serverCount || this.client.guilds.cache.size || this.client.guilds.size
+    }, true);
     console.log("Server Count Posted to TBL!");
     return response.body;
   }
